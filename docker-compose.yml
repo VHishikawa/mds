@@ -14,6 +14,14 @@ x-airflow-common:
     AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
     AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
     AIRFLOW__API__AUTH_BACKENDS: 'airflow.api.auth.backend.basic_auth'
+    AIRFLOW__WEBSERVER__EXPOSE_CONFIG: 'true'
+    AIRFLOW__SCHEDULER__MIN_FILE_PROCESS_INTERVAL: 5
+    AIRFLOW__SCHEDULER__DAG_DIR_LIST_INTERVAL: 20
+    AIRFLOW__SMTP__SMTP_HOST: smtp.gmail.com
+    AIRFLOW__SMTP__SMTP_USER: hishikawavictorapi@gmail.com
+    AIRFLOW__SMTP__SMTP_PASSWORD: ozcu smol ncdg jjvx
+    AIRFLOW__SMTP__SMTP_PORT: 587
+    AIRFLOW__SMTP__MAIL_FROM: Airflow
     #_PIP_ADDITIONAL_REQUIREMENTS: ${_PIP_ADDITIONAL_REQUIREMENTS:- apache-airflow-providers-apache-spark}
   volumes:
     - ./airflow/dags:/opt/airflow/dags
@@ -260,7 +268,7 @@ services:
     command: webserver
     user: root
     ports:
-      - 8180:8080
+      - 9898:8080
     healthcheck:
       test: ["CMD", "curl", "--fail", "http://localhost:8080/health"]
       interval: 10s
@@ -622,8 +630,9 @@ services:
       MINIO_ACCESS_KEY: datalake
       MINIO_SECRET_KEY: datalake
     volumes:
-      - ./minio/data1:/data
+    #  - ./minio/data:/data
       - ./scripts:/scripts
+      - minio_storage:/data
 
   superset:
     platform: linux/amd64
@@ -751,3 +760,5 @@ services:
         limits:
           memory: 500m
 
+volumes:
+  minio_storage: {}
